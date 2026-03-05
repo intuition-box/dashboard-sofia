@@ -123,20 +123,20 @@
 }
 
 .leaderboard__row--highlighted:hover {
-  background: linear-gradient(90deg, rgba(199, 134, 108, 0.15) 0%, rgba(245, 158, 11, 0.06) 50%, transparent 80%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--color-primary) 15%, transparent) 0%, color-mix(in srgb, var(--color-gold) 6%, transparent) 50%, transparent 80%);
   background-size: 100% 100%;
   animation: none;
 }
 
 @keyframes glow-sweep {
   0% {
-    background: linear-gradient(90deg, rgba(199, 134, 108, 0.1) 0%, transparent 50%);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--color-primary) 10%, transparent) 0%, transparent 50%);
   }
   50% {
-    background: linear-gradient(90deg, rgba(199, 134, 108, 0.06) 0%, rgba(245, 158, 11, 0.08) 40%, transparent 70%);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--color-primary) 6%, transparent) 0%, color-mix(in srgb, var(--color-gold) 8%, transparent) 40%, transparent 70%);
   }
   100% {
-    background: linear-gradient(90deg, rgba(245, 158, 11, 0.06) 0%, rgba(199, 134, 108, 0.1) 50%, transparent 80%);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--color-gold) 6%, transparent) 0%, color-mix(in srgb, var(--color-primary) 10%, transparent) 50%, transparent 80%);
   }
 }
 
@@ -178,6 +178,13 @@
   z-index: 1;
 }
 
+.leaderboard__avatar--indigo { background-color: #6366f1; }
+.leaderboard__avatar--pink { background-color: #ec4899; }
+.leaderboard__avatar--amber { background-color: var(--color-gold); }
+.leaderboard__avatar--emerald { background-color: #10b981; }
+.leaderboard__avatar--violet { background-color: #8b5cf6; }
+.leaderboard__avatar--cyan { background-color: #06b6d4; }
+
 /* Spinning ring for #1 */
 .leaderboard__avatar-wrap--top {
   width: 32px;
@@ -199,11 +206,11 @@
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    #F59E0B,
-    #FCD34D,
-    #F59E0B,
-    #D97706,
-    #F59E0B
+    var(--color-gold),
+    var(--color-golden),
+    var(--color-gold),
+    var(--color-secondary),
+    var(--color-gold)
   );
   animation: spin-ring 3s linear infinite;
   z-index: 0;
@@ -241,7 +248,7 @@
   font-size: var(--font-size-xs);
   font-weight: 400;
   color: var(--color-gold);
-  background: rgba(245, 158, 11, 0.12);
+  background: color-mix(in srgb, var(--color-gold) 12%, transparent);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--border-radius-pill);
   text-transform: uppercase;

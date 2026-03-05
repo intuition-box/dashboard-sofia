@@ -22,12 +22,12 @@
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(199, 134, 108, 0.15) 20%,
-    rgba(199, 134, 108, 0.4) 50%,
-    rgba(199, 134, 108, 0.15) 80%,
+    color-mix(in srgb, var(--color-primary) 15%, transparent) 20%,
+    color-mix(in srgb, var(--color-primary) 40%, transparent) 50%,
+    color-mix(in srgb, var(--color-primary) 15%, transparent) 80%,
     transparent 100%
   );
-  box-shadow: 0 1px 12px rgba(199, 134, 108, 0.2);
+  box-shadow: 0 1px 12px color-mix(in srgb, var(--color-primary) 20%, transparent);
   animation: navbar-glow 4s ease-in-out infinite alternate;
 }
 
@@ -83,7 +83,7 @@
   font-size: var(--font-size-xs);
   font-weight: 400;
   color: var(--color-primary);
-  background: rgba(199, 134, 108, 0.12);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--border-radius-pill);
   text-transform: uppercase;

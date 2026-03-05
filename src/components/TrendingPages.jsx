@@ -1,22 +1,27 @@
+import { useState } from 'react';
 import { trending } from '../data';
 import './TrendingPages.css';
 
-const INTENT_COLORS = {
-  Work: 'var(--color-intent-work)',
-  Learning: 'var(--color-intent-learning)',
-  Fun: 'var(--color-intent-fun)',
-  Inspiration: 'var(--color-intent-inspiration)',
-};
+const FILTER_OPTIONS = ['Sort Rate', 'Explorers'];
 
 function TrendingPages() {
+  const [filter, setFilter] = useState('Sort Rate');
+
   return (
     <section className="trending">
       <div className="trending__inner">
         <div className="trending__header">
           <h2 className="trending__title">Trending Pages</h2>
           <div className="trending__filters">
-            <button className="trending__filter trending__filter--active">Sort Rate</button>
-            <button className="trending__filter">Explorers</button>
+            {FILTER_OPTIONS.map((option) => (
+              <button
+                key={option}
+                className={`trending__filter${filter === option ? ' trending__filter--active' : ''}`}
+                onClick={() => setFilter(option)}
+              >
+                {option}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -28,10 +33,7 @@ function TrendingPages() {
                 <span className="trending__card-badge">{item.badge}</span>
               </div>
               <div className="trending__card-bottom">
-                <span
-                  className="trending__intent"
-                  style={{ color: INTENT_COLORS[item.intent], borderColor: INTENT_COLORS[item.intent] }}
-                >
+                <span className={`trending__intent trending__intent--${item.intent.toLowerCase()}`}>
                   {item.intentLabel}
                 </span>
               </div>

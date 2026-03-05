@@ -68,7 +68,7 @@
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: var(--glass-border);
   border-radius: var(--border-radius-lg);
   padding: var(--space-lg);
   display: flex;
@@ -88,27 +88,27 @@
 /* Intent-colored border glow on hover */
 .trending__card[data-intent="work"]:hover {
   border-color: var(--color-intent-work);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px color-mix(in srgb, var(--color-intent-work) 15%, transparent);
 }
 
 .trending__card[data-intent="learning"]:hover {
   border-color: var(--color-intent-learning);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px color-mix(in srgb, var(--color-intent-learning) 15%, transparent);
 }
 
 .trending__card[data-intent="fun"]:hover {
   border-color: var(--color-intent-fun);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px color-mix(in srgb, var(--color-intent-fun) 15%, transparent);
 }
 
 .trending__card[data-intent="inspiration"]:hover {
   border-color: var(--color-intent-inspiration);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px color-mix(in srgb, var(--color-intent-inspiration) 15%, transparent);
 }
 
 .trending__card[data-intent="buying"]:hover {
   border-color: var(--color-intent-buying);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(239, 68, 68, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px color-mix(in srgb, var(--color-intent-buying) 15%, transparent);
 }
 
 .trending__card-top {
@@ -129,7 +129,7 @@
   font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--color-primary);
-  background: rgba(199, 134, 108, 0.12);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--border-radius-pill);
 }
@@ -147,6 +147,31 @@
   border-radius: var(--border-radius-pill);
   border: 1px solid;
   opacity: 0.8;
+}
+
+.trending__intent--work {
+  color: var(--color-intent-work);
+  border-color: var(--color-intent-work);
+}
+
+.trending__intent--learning {
+  color: var(--color-intent-learning);
+  border-color: var(--color-intent-learning);
+}
+
+.trending__intent--fun {
+  color: var(--color-intent-fun);
+  border-color: var(--color-intent-fun);
+}
+
+.trending__intent--inspiration {
+  color: var(--color-intent-inspiration);
+  border-color: var(--color-intent-inspiration);
+}
+
+.trending__intent--buying {
+  color: var(--color-intent-buying);
+  border-color: var(--color-intent-buying);
 }
 
 /* Responsive */

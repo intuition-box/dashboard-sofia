@@ -10,7 +10,7 @@ function Leaderboard() {
   const sorted = [...leaderboard].sort((a, b) => {
     switch (sortBy) {
       case 'Streak':
-        return a.streak.localeCompare(b.streak);
+        return b.streakDays - a.streakDays;
       case 'Certifications':
         return b.certs - a.certs;
       case 'Gold':
@@ -64,10 +64,7 @@ function Leaderboard() {
                   </td>
                   <td className="leaderboard__cell leaderboard__cell--sort">
                     <span className={`leaderboard__avatar-wrap${i === 0 ? ' leaderboard__avatar-wrap--top' : ''}`}>
-                      <span
-                        className="leaderboard__avatar"
-                        style={{ backgroundColor: user.color }}
-                      />
+                      <span className={`leaderboard__avatar leaderboard__avatar--${user.avatarColor}`} />
                     </span>
                   </td>
                   <td className="leaderboard__cell leaderboard__cell--user">

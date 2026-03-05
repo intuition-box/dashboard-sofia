@@ -80,7 +80,7 @@
   width: 20px;
   height: 20px;
   border-radius: var(--border-radius-sm);
-  background: rgba(199, 134, 108, 0.2);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
   color: var(--color-primary);
   font-family: var(--font-body);
   font-size: var(--font-size-xs);

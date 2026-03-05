@@ -99,6 +99,11 @@
   animation: gold-pulse 2.5s ease-in-out infinite;
 }
 
+.rewards__amount--pioneer { color: var(--color-gold); }
+.rewards__amount--explorer { color: var(--color-intent-inspiration-light); }
+.rewards__amount--contributor { color: var(--color-intent-learning-light); }
+.rewards__amount--voter { color: var(--color-hover-pink); }
+
 @keyframes gold-pulse {
   0%, 100% {
     text-shadow: 0 0 4px rgba(245, 158, 11, 0.2);
