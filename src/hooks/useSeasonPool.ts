@@ -1,29 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { formatEther } from 'viem'
-import { graphqlQuery } from '../api/graphqlClient'
+import type { Address } from 'viem'
+import { graphqlQuery } from '../services/graphqlClient'
 import { SEASON_POOL_TERM_ID, SEASON_POOL_CURVE_ID } from '../config'
+import { GET_SEASON_POOL_POSITIONS } from '../graphql/queries'
+import type { GetSeasonPoolPositionsResponse, VaultRaw } from '../graphql/queries'
+import type { PoolPosition, VaultStats } from '../types'
 
-const QUERY = `
-  query GetSeasonPoolPositions($termId: String!, $curveId: numeric!) {
-    vaults(where: { term_id: { _eq: $termId }, curve_id: { _eq: $curveId } }) {
-      current_share_price
-      total_shares
-      total_assets
-      position_count
-      positions(order_by: { shares: desc }) {
-        account_id
-        shares
-        total_deposit_assets_after_total_fees
-        total_redeem_assets_for_receiver
-      }
-    }
-  }
-`
-
-function processPositions(vault) {
+function processPositions(vault: VaultRaw): { positions: PoolPosition[]; vaultStats: VaultStats } {
   const sharePrice = BigInt(vault.current_share_price || '0')
 
-  const positions = (vault.positions || [])
+  const positions: PoolPosition[] = (vault.positions || [])
     .filter((p) => BigInt(p.shares || '0') > 0n)
     .map((p) => {
       const shares = BigInt(p.shares)
@@ -36,7 +23,7 @@ function processPositions(vault) {
         netDeposited > 0n ? Number((pnl * 10000n) / netDeposited) / 100 : 0
 
       return {
-        address: p.account_id,
+        address: p.account_id as Address,
         shares,
         sharesFormatted: formatEther(shares),
         currentValue,
@@ -60,20 +47,23 @@ function processPositions(vault) {
   }
 }
 
-export function useSeasonPool(enabled) {
-  const [data, setData] = useState(null)
-  const [vaultStats, setVaultStats] = useState(null)
+export function useSeasonPool(enabled: boolean) {
+  const [data, setData] = useState<PoolPosition[] | null>(null)
+  const [vaultStats, setVaultStats] = useState<VaultStats | null>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [fetched, setFetched] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const result = await graphqlQuery(QUERY, {
-        termId: SEASON_POOL_TERM_ID,
-        curveId: SEASON_POOL_CURVE_ID,
-      })
+      const result = await graphqlQuery<GetSeasonPoolPositionsResponse>(
+        GET_SEASON_POOL_POSITIONS,
+        {
+          termId: SEASON_POOL_TERM_ID,
+          curveId: SEASON_POOL_CURVE_ID,
+        }
+      )
 
       const vault = result?.vaults?.[0]
       if (!vault) {
@@ -89,7 +79,7 @@ export function useSeasonPool(enabled) {
       setFetched(true)
     } catch (err) {
       console.error('[useSeasonPool]', err)
-      setError(err.message)
+      setError((err as Error).message)
     } finally {
       setLoading(false)
     }

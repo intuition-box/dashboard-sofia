@@ -1,10 +1,20 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { formatEther } from 'viem'
-import { EventFetcher } from '../api/eventFetcher'
+import type { Address } from 'viem'
+import { EventFetcher } from '../services/eventFetcher'
 import { REFRESH_INTERVAL } from '../config'
+import type { TransactionForwardedEvent, AlphaTester, AlphaTestersData } from '../types'
 
-function aggregateEvents(events) {
-  const wallets = new Map()
+interface WalletEntry {
+  address: Address
+  tx: number
+  intentions: number
+  pioneer: number
+  trustVolume: bigint
+}
+
+function aggregateEvents(events: TransactionForwardedEvent[]): AlphaTestersData {
+  const wallets = new Map<string, WalletEntry>()
 
   let totalTx = 0
   let totalIntentions = 0
@@ -36,7 +46,7 @@ function aggregateEvents(events) {
     totalTrustVolume += evt.totalReceived
   }
 
-  const leaderboard = Array.from(wallets.values()).map((w) => ({
+  const leaderboard: AlphaTester[] = Array.from(wallets.values()).map((w) => ({
     ...w,
     trustVolumeFormatted: formatEther(w.trustVolume),
   }))
@@ -55,11 +65,16 @@ function aggregateEvents(events) {
   }
 }
 
+const INITIAL_DATA: AlphaTestersData = {
+  leaderboard: [],
+  totals: { wallets: 0, tx: 0, intentions: 0, pioneers: 0, trustVolume: 0n },
+}
+
 export function useAlphaTesters() {
-  const fetcherRef = useRef(null)
-  const [data, setData] = useState({ leaderboard: [], totals: { wallets: 0, tx: 0, intentions: 0, pioneers: 0, trustVolume: 0n } })
+  const fetcherRef = useRef<EventFetcher | null>(null)
+  const [data, setData] = useState<AlphaTestersData>(INITIAL_DATA)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     try {
@@ -71,7 +86,7 @@ export function useAlphaTesters() {
       setError(null)
     } catch (err) {
       console.error('[useAlphaTesters]', err)
-      setError(err.message)
+      setError((err as Error).message)
     } finally {
       setLoading(false)
     }

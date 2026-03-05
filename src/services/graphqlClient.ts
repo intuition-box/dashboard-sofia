@@ -1,10 +1,14 @@
 import { GRAPHQL_URL } from '../config'
+import type { GraphQLResponse } from '../types'
 
 const MAX_RETRIES = 3
 const INITIAL_RETRY_DELAY_MS = 1000
 
-export async function graphqlQuery(query, variables) {
-  let lastError = null
+export async function graphqlQuery<T>(
+  query: string,
+  variables?: Record<string, unknown>
+): Promise<T> {
+  let lastError: Error | null = null
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     if (attempt > 0) {
@@ -29,16 +33,16 @@ export async function graphqlQuery(query, variables) {
         throw new Error(`GraphQL HTTP error: ${response.status}`)
       }
 
-      const json = await response.json()
+      const json: GraphQLResponse<T> = await response.json()
 
       if (json.errors) {
         throw new Error(`GraphQL error: ${json.errors[0].message}`)
       }
 
-      return json.data
+      return json.data as T
     } catch (err) {
-      lastError = err
-      if (!err.message.includes('429')) throw err
+      lastError = err as Error
+      if (!(err as Error).message.includes('429')) throw err
     }
   }
 
