@@ -1,4 +1,12 @@
-const DEFAULT_CONFIG = {
+import type { RpcQueueConfig } from '../types'
+
+type RequiredConfig = Required<RpcQueueConfig>
+
+interface PendingEntry {
+  execute: () => void
+}
+
+const DEFAULT_CONFIG: RequiredConfig = {
   minDelayMs: 500,
   baseBackoffMs: 2_000,
   maxBackoffMs: 30_000,
@@ -7,21 +15,24 @@ const DEFAULT_CONFIG = {
 }
 
 export class RpcQueue {
-  constructor(config) {
+  private config: RequiredConfig
+  private busy = false
+  private pending: PendingEntry[] = []
+  private lastDispatchTime = 0
+  private backoffUntil = 0
+  private consecutiveRateLimits = 0
+
+  constructor(config?: RpcQueueConfig) {
     this.config = { ...DEFAULT_CONFIG, ...config }
-    this.busy = false
-    this.pending = []
-    this.lastDispatchTime = 0
-    this.backoffUntil = 0
-    this.consecutiveRateLimits = 0
   }
 
-  createFetchFn() {
-    return (input, init) => this._enqueue(() => fetch(input, init))
+  createFetchFn(): typeof fetch {
+    return (input: RequestInfo | URL, init?: RequestInit) =>
+      this._enqueue(() => fetch(input, init))
   }
 
-  _enqueue(fn) {
-    return new Promise((resolve, reject) => {
+  private _enqueue(fn: () => Promise<Response>): Promise<Response> {
+    return new Promise<Response>((resolve, reject) => {
       this.pending.push({
         execute: () => this._dispatch(fn).then(resolve, reject),
       })
@@ -29,14 +40,14 @@ export class RpcQueue {
     })
   }
 
-  _flush() {
+  private _flush(): void {
     if (this.pending.length > 0 && !this.busy) {
-      const entry = this.pending.shift()
+      const entry = this.pending.shift()!
       entry.execute()
     }
   }
 
-  async _dispatch(fn) {
+  private async _dispatch(fn: () => Promise<Response>): Promise<Response> {
     this.busy = true
     try {
       for (let attempt = 0; attempt <= this.config.maxRetries; attempt++) {
@@ -44,7 +55,7 @@ export class RpcQueue {
         await this._enforceMinDelay()
         this.lastDispatchTime = Date.now()
 
-        let response
+        let response: Response
         try {
           response = await fn()
         } catch (err) {
@@ -69,19 +80,19 @@ export class RpcQueue {
     }
   }
 
-  async _waitForBackoff() {
+  private async _waitForBackoff(): Promise<void> {
     const remaining = this.backoffUntil - Date.now()
     if (remaining > 0) await this._sleep(remaining)
   }
 
-  async _enforceMinDelay() {
+  private async _enforceMinDelay(): Promise<void> {
     const elapsed = Date.now() - this.lastDispatchTime
     if (elapsed < this.config.minDelayMs) {
       await this._sleep(this.config.minDelayMs - elapsed)
     }
   }
 
-  _applyBackoff() {
+  private _applyBackoff(): void {
     this.consecutiveRateLimits++
     const base =
       this.config.baseBackoffMs *
@@ -94,7 +105,7 @@ export class RpcQueue {
     )
   }
 
-  _sleep(ms) {
+  private _sleep(ms: number): Promise<void> {
     return new Promise((r) => setTimeout(r, ms))
   }
 }

@@ -1,19 +1,19 @@
 import { parseAbiItem } from 'viem'
+import type { Address } from 'viem'
 import { rpcClient } from './rpcClient'
 import { SOFIA_PROXY_ADDRESS, BLOCK_CHUNK, SEASON_START, SEASON_START_BLOCK } from '../config'
+import type { TransactionForwardedEvent } from '../types'
 
 const TX_FORWARDED_EVENT = parseAbiItem(
   'event TransactionForwarded(string operation, address indexed user, uint256 sofiaFee, uint256 multiVaultValue, uint256 totalReceived)'
 )
 
 export class EventFetcher {
-  constructor() {
-    this.events = []
-    this.lastScannedBlock = 0n
-    this.startBlock = null
-  }
+  private events: TransactionForwardedEvent[] = []
+  private lastScannedBlock = 0n
+  private startBlock: bigint | null = null
 
-  async fetch() {
+  async fetch(): Promise<TransactionForwardedEvent[]> {
     if (!this.startBlock) {
       this.startBlock = await this._resolveStartBlock()
       this.lastScannedBlock = this.startBlock
@@ -31,9 +31,9 @@ export class EventFetcher {
     const newLogs = await this._getLogsInChunks(fromBlock, currentBlock)
 
     if (newLogs.length > 0) {
-      const newEvents = newLogs.map((log) => ({
+      const newEvents: TransactionForwardedEvent[] = newLogs.map((log) => ({
         operation: log.args.operation ?? 'unknown',
-        user: log.args.user ?? '0x',
+        user: (log.args.user ?? '0x') as Address,
         sofiaFee: log.args.sofiaFee ?? 0n,
         multiVaultValue: log.args.multiVaultValue ?? 0n,
         totalReceived: log.args.totalReceived ?? 0n,
@@ -49,11 +49,9 @@ export class EventFetcher {
     return this.events
   }
 
-  async _resolveStartBlock() {
+  private async _resolveStartBlock(): Promise<bigint> {
     if (SEASON_START_BLOCK > 0n) return SEASON_START_BLOCK
 
-    // Estimate block number from SEASON_START date
-    // Intuition chain: ~1 block/sec
     const currentBlock = await rpcClient.getBlockNumber()
     const now = Date.now()
     const seasonStartMs = SEASON_START.getTime()
@@ -62,8 +60,8 @@ export class EventFetcher {
     return estimated > 0n ? estimated : 1n
   }
 
-  async _getLogsInChunks(fromBlock, toBlock) {
-    const allLogs = []
+  private async _getLogsInChunks(fromBlock: bigint, toBlock: bigint) {
+    const allLogs: Awaited<ReturnType<typeof rpcClient.getLogs<typeof TX_FORWARDED_EVENT>>>= []
     let cursor = fromBlock
 
     while (cursor <= toBlock) {
@@ -86,7 +84,7 @@ export class EventFetcher {
     return allLogs
   }
 
-  get cachedEventCount() {
+  get cachedEventCount(): number {
     return this.events.length
   }
 }

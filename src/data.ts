@@ -1,4 +1,6 @@
-export const trending = [
+import type { TrendingItem, Reward } from './types'
+
+export const trending: TrendingItem[] = [
   { title: "Intending", badge: "/CRI", intent: "Learning", intentLabel: "Learning" },
   { title: "Intending", badge: "/CRI", intent: "Work", intentLabel: "Work" },
   { title: "Intending", badge: "/CRI", intent: "Work", intentLabel: "Work" },
@@ -7,7 +9,7 @@ export const trending = [
   { title: "Intending", badge: "/CRI", intent: "Inspiration", intentLabel: "Inspiration" },
 ];
 
-export const rewards = [
+export const rewards: Reward[] = [
   { icon: "/badges/pioneer.png", title: "Pioneer", reward: "+50 Gold", desc: "First to recommend at show", theme: "pioneer" },
   { icon: "/badges/explorer.png", title: "Explorer", reward: "+20 Gold", desc: "Translate with +50 Gold", theme: "explorer" },
   { icon: "/badges/contributor.png", title: "Contributor", reward: "+10 Gold", desc: "We helped you have Found Smilring Core", theme: "contributor" },
