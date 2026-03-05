@@ -1,0 +1,167 @@
+/* ===========================================
+   Trending Pages Component — Sofia Brandkit
+   =========================================== */
+
+.trending {
+  padding: 0 var(--space-xl);
+  margin-bottom: var(--space-section);
+}
+
+.trending__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.trending__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.trending__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.trending__filters {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.trending__filter {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--border-radius-pill);
+  background: var(--color-bg-glass-light);
+  border: 1px solid var(--color-border-glass);
+  transition: all var(--transition-fast);
+}
+
+.trending__filter:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-primary);
+}
+
+.trending__filter--active {
+  background: var(--gradient-cta);
+  background-size: 200% 200%;
+  animation: orb-gradient 20s ease infinite;
+  color: var(--color-primary-dark);
+  border-color: transparent;
+}
+
+.trending__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.trending__card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  box-shadow: var(--glass-shadow);
+  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trending__card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), var(--glass-shadow);
+}
+
+/* Intent-colored border glow on hover */
+.trending__card[data-intent="work"]:hover {
+  border-color: var(--color-intent-work);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+.trending__card[data-intent="learning"]:hover {
+  border-color: var(--color-intent-learning);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+.trending__card[data-intent="fun"]:hover {
+  border-color: var(--color-intent-fun);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+.trending__card[data-intent="inspiration"]:hover {
+  border-color: var(--color-intent-inspiration);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+.trending__card[data-intent="buying"]:hover {
+  border-color: var(--color-intent-buying);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.trending__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.trending__card-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.trending__card-badge {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(199, 134, 108, 0.12);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-pill);
+}
+
+.trending__card-bottom {
+  display: flex;
+  align-items: center;
+}
+
+.trending__intent {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-pill);
+  border: 1px solid;
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trending__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .trending {
+    padding: 0 var(--space-lg);
+  }
+
+  .trending__grid {
+    grid-template-columns: 1fr;
+  }
+}

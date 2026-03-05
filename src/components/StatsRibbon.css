@@ -1,0 +1,129 @@
+/* ===========================================
+   Stats Ribbon Component — Sofia Brandkit
+   =========================================== */
+
+.stats-ribbon {
+  padding: 0 var(--space-xl);
+  margin-bottom: var(--space-section);
+}
+
+.stats-ribbon__inner {
+  display: flex;
+  gap: var(--space-lg);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  overflow-x: auto;
+  padding: var(--space-lg) var(--space-lg);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.stats-ribbon__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.stats-ribbon__card {
+  flex: 1;
+  min-width: 150px;
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  box-shadow: var(--glass-shadow);
+  transition: box-shadow var(--transition-base), transform var(--transition-fast);
+  overflow: hidden;
+}
+
+/* Shimmer / Shine effect */
+.stats-ribbon__card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 55%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: none;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.stats-ribbon__card:hover::after {
+  animation: shimmer-slide 1.2s ease forwards;
+}
+
+.stats-ribbon__card:hover {
+  box-shadow: var(--shadow-primary-glow);
+  transform: translateY(-2px);
+}
+
+@keyframes shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.stats-ribbon__index {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  width: 20px;
+  height: 20px;
+  border-radius: var(--border-radius-sm);
+  background: rgba(199, 134, 108, 0.2);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats-ribbon__value {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.stats-ribbon__label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-ribbon__card {
+    min-width: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-ribbon {
+    padding: 0 var(--space-lg);
+  }
+
+  .stats-ribbon__card {
+    min-width: 120px;
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .stats-ribbon__value {
+    font-size: var(--font-size-xl);
+  }
+}

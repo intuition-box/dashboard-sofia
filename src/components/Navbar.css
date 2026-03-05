@@ -1,0 +1,106 @@
+/* ===========================================
+   Navbar Component — Sofia Brandkit
+   =========================================== */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: none;
+  box-shadow: var(--glass-shadow);
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(199, 134, 108, 0.15) 20%,
+    rgba(199, 134, 108, 0.4) 50%,
+    rgba(199, 134, 108, 0.15) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 1px 12px rgba(199, 134, 108, 0.2);
+  animation: navbar-glow 4s ease-in-out infinite alternate;
+}
+
+@keyframes navbar-glow {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-md) var(--space-xl);
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.navbar__logo {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--border-radius-md);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.navbar__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.navbar__hex {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.navbar__badge {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  color: var(--color-primary);
+  background: rgba(199, 134, 108, 0.12);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .navbar__inner {
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  .navbar__title {
+    font-size: var(--font-size-sm);
+  }
+
+  .navbar__hex {
+    display: none;
+  }
+}

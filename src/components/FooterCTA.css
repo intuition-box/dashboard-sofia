@@ -1,0 +1,44 @@
+/* ===========================================
+   Footer Component — Sofia Brandkit
+   =========================================== */
+
+.footer {
+  padding: var(--space-3xl) var(--space-xl);
+  border-top: 1px solid var(--color-border-glass);
+}
+
+.footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.footer__left {
+  font-family: var(--font-display);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.footer__right {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .footer {
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .footer__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

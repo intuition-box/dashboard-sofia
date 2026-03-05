@@ -1,0 +1,31 @@
+/* ===========================================
+   App Root Styles
+   =========================================== */
+
+.app {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Grainient WebGL Background */
+.app__bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* Ensure all content sits above background */
+.navbar,
+.hero,
+.stats-ribbon,
+.leaderboard,
+.trending,
+.rewards,
+.footer-cta {
+  position: relative;
+  z-index: 1;
+}
