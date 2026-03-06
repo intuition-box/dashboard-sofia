@@ -44,7 +44,7 @@ function tripleToItem(triple: TrendingTripleRaw, category: IntentCategory): Tren
   return {
     category,
     label: label || domain,
-    url,
+    url: `https://${domain}`,
     domain,
     favicon: `https://www.google.com/s2/favicons?domain=${domain}&sz=32`,
     certifiers: triple.all_positions.length,

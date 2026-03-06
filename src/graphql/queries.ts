@@ -19,6 +19,19 @@ export interface GetSeasonPoolPositionsResponse {
   vaults: VaultRaw[]
 }
 
+// ── Account Labels Response Types ──
+
+export interface AccountResult {
+  id: string
+  label?: string | null
+  image?: string | null
+  atom?: { label?: string | null; image?: string | null } | null
+}
+
+export interface GetAccountLabelsResponse {
+  accounts: AccountResult[]
+}
+
 // ── Trending Response Types ──
 
 export interface TrendingTripleRaw {
@@ -34,6 +47,20 @@ export interface GetTrendingByPredicateResponse {
 }
 
 // ── Queries ──
+
+export const GET_ACCOUNT_LABELS = `
+  query GetAccountLabels($ids: [String!]!) {
+    accounts(where: { id: { _in: $ids } }) {
+      id
+      label
+      image
+      atom {
+        label
+        image
+      }
+    }
+  }
+`
 
 export const GET_TRENDING_BY_PREDICATE = `
   query GetTrendingByPredicate($predicateId: String!, $limit: Int!) {
