@@ -291,7 +291,18 @@
   color: #ef4444;
 }
 
+.leaderboard__avatar-img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: var(--space-xs);
+}
+
 .leaderboard__address-link {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-body);
   font-size: var(--font-size-base);
   font-weight: 500;

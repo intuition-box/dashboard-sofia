@@ -1,17 +1,14 @@
 import { useState, useMemo } from 'react';
 import { formatEther } from 'viem';
+import type { Address } from 'viem';
 import { useSeasonPool } from '../hooks/useSeasonPool';
+import { useEnsNames } from '../hooks/useEnsNames';
 import { EXPLORER_URL } from '../config';
 import type { LeaderboardProps, AlphaTester, PoolPosition } from '../types';
 import './styles/Leaderboard.css';
 
 type AlphaSortOption = 'TX' | 'Intentions' | 'Pioneer' | 'Trust Volume';
 type PoolSortOption = 'Shares' | 'Current Value' | 'P&L' | 'P&L %';
-
-function truncateAddress(addr: string) {
-  if (!addr) return '';
-  return addr.slice(0, 6) + '...' + addr.slice(-4);
-}
 
 function formatTrust(wei: bigint) {
   const num = parseFloat(formatEther(wei));
@@ -98,6 +95,14 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
   const sortedAlpha = useMemo(() => sortAlpha(alphaData, alphaSortBy), [alphaData, alphaSortBy]);
   const sortedPool = useMemo(() => poolData ? sortPool(poolData, poolSortBy) : [], [poolData, poolSortBy]);
 
+  const allAddresses = useMemo(() => {
+    const alphaAddrs = alphaData.map((u) => u.address);
+    const poolAddrs = (poolData || []).map((p) => p.address);
+    return [...alphaAddrs, ...poolAddrs] as Address[];
+  }, [alphaData, poolData]);
+
+  const { getDisplay, getAvatar } = useEnsNames(allAddresses);
+
   const isAlpha = activeTab === 'alpha';
   const loading = isAlpha ? alphaLoading : poolLoading;
   const error = isAlpha ? alphaError : poolError;
@@ -167,7 +172,14 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
                           rel="noopener noreferrer"
                           className="leaderboard__address-link"
                         >
-                          {truncateAddress(user.address)}
+                          {getAvatar(user.address) && (
+                            <img
+                              src={getAvatar(user.address)!}
+                              alt=""
+                              className="leaderboard__avatar-img"
+                            />
+                          )}
+                          {getDisplay(user.address)}
                         </a>
                       </td>
                       <td className={colClass('Intentions', alphaSortBy)}>
@@ -223,7 +235,14 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
                           rel="noopener noreferrer"
                           className="leaderboard__address-link"
                         >
-                          {truncateAddress(pos.address)}
+                          {getAvatar(pos.address) && (
+                            <img
+                              src={getAvatar(pos.address)!}
+                              alt=""
+                              className="leaderboard__avatar-img"
+                            />
+                          )}
+                          {getDisplay(pos.address)}
                         </a>
                       </td>
                       <td className={colClass('Shares', poolSortBy)}>
