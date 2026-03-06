@@ -1,17 +1,14 @@
 import { useState, useMemo } from 'react';
 import { formatEther } from 'viem';
+import type { Address } from 'viem';
 import { useSeasonPool } from '../hooks/useSeasonPool';
+import { useEnsNames } from '../hooks/useEnsNames';
 import { EXPLORER_URL } from '../config';
 import type { LeaderboardProps, AlphaTester, PoolPosition } from '../types';
 import './styles/Leaderboard.css';
 
 type AlphaSortOption = 'TX' | 'Intentions' | 'Pioneer' | 'Trust Volume';
 type PoolSortOption = 'Shares' | 'Current Value' | 'P&L' | 'P&L %';
-
-function truncateAddress(addr: string) {
-  if (!addr) return '';
-  return addr.slice(0, 6) + '...' + addr.slice(-4);
-}
 
 function formatTrust(wei: bigint) {
   const num = parseFloat(formatEther(wei));
@@ -82,7 +79,6 @@ const ALPHA_COLUMNS: { label: string; key: AlphaSortOption }[] = [
 ];
 
 const POOL_COLUMNS: { label: string; key: PoolSortOption }[] = [
-  { label: 'Shares', key: 'Shares' },
   { label: 'Current Value', key: 'Current Value' },
   { label: 'P&L', key: 'P&L' },
   { label: 'P&L %', key: 'P&L %' },
@@ -97,6 +93,14 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
 
   const sortedAlpha = useMemo(() => sortAlpha(alphaData, alphaSortBy), [alphaData, alphaSortBy]);
   const sortedPool = useMemo(() => poolData ? sortPool(poolData, poolSortBy) : [], [poolData, poolSortBy]);
+
+  const allAddresses = useMemo(() => {
+    const alphaAddrs = alphaData.map((u) => u.address);
+    const poolAddrs = (poolData || []).map((p) => p.address);
+    return [...alphaAddrs, ...poolAddrs] as Address[];
+  }, [alphaData, poolData]);
+
+  const { getDisplay, getAvatar } = useEnsNames(allAddresses);
 
   const isAlpha = activeTab === 'alpha';
   const loading = isAlpha ? alphaLoading : poolLoading;
@@ -167,7 +171,12 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
                           rel="noopener noreferrer"
                           className="leaderboard__address-link"
                         >
-                          {truncateAddress(user.address)}
+                          <img
+                            src={getAvatar(user.address)}
+                            alt=""
+                            className="leaderboard__avatar-img"
+                          />
+                          {getDisplay(user.address)}
                         </a>
                       </td>
                       <td className={colClass('Intentions', alphaSortBy)}>
@@ -204,10 +213,10 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
                   </tr>
                 </thead>
                 <tbody>
-                  {poolLoading && <SkeletonRows cols={6} />}
+                  {poolLoading && <SkeletonRows cols={5} />}
                   {poolError && (
                     <tr className="leaderboard__row">
-                      <td className="leaderboard__cell leaderboard__cell--error" colSpan={6}>{poolError}</td>
+                      <td className="leaderboard__cell leaderboard__cell--error" colSpan={5}>{poolError}</td>
                     </tr>
                   )}
                   {!poolLoading && !poolError && sortedPool.map((pos, i) => (
@@ -223,11 +232,13 @@ function Leaderboard({ alphaData = [], alphaLoading, alphaError }: LeaderboardPr
                           rel="noopener noreferrer"
                           className="leaderboard__address-link"
                         >
-                          {truncateAddress(pos.address)}
+                          <img
+                            src={getAvatar(pos.address)}
+                            alt=""
+                            className="leaderboard__avatar-img"
+                          />
+                          {getDisplay(pos.address)}
                         </a>
-                      </td>
-                      <td className={colClass('Shares', poolSortBy)}>
-                        <span className="leaderboard__mono">{formatTrust(pos.shares)}</span>
                       </td>
                       <td className={colClass('Current Value', poolSortBy)}>
                         <span className="leaderboard__mono">{formatTrust(pos.currentValue)}</span>
