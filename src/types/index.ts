@@ -123,6 +123,16 @@ export interface GrainientProps {
   className?: string
 }
 
+// ── User Stats ──
+
+export interface UserStats {
+  isAlphaTester: boolean
+  alphaData: AlphaTester | null
+  alphaRank: number | null
+  poolData: PoolPosition | null
+  poolRank: number | null
+}
+
 // ── Service Types ──
 
 export interface RpcQueueConfig {

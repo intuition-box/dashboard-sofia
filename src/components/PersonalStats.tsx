@@ -1,5 +1,5 @@
 import { formatEther } from 'viem';
-import type { UserStats } from '../hooks/useUserStats';
+import type { UserStats } from '../types';
 import './styles/PersonalStats.css';
 
 function formatTrust(wei: bigint) {

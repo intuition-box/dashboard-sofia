@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { graphqlQuery } from '../services/graphqlClient'
 import { PREDICATE_IDS } from '../config'
 import { GET_TRENDING_BY_PREDICATE } from '../graphql/queries'
-import type { GetTrendingByPredicateResponse, TrendingTripleRaw } from '../graphql/queries'
+import type { GetTrendingByPredicateResponse, TrendingTripleRaw } from '../types/graphql'
 import type { IntentCategory, TrendingItemLive } from '../types'
 
 const CATEGORIES: { type: IntentCategory; predicateId: string }[] = [

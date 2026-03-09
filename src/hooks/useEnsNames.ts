@@ -7,7 +7,7 @@ import { createAvatar } from '@dicebear/core'
 import { glass } from '@dicebear/collection'
 import { graphqlQuery } from '../services/graphqlClient'
 import { GET_ACCOUNT_LABELS } from '../graphql/queries'
-import type { GetAccountLabelsResponse } from '../graphql/queries'
+import type { GetAccountLabelsResponse } from '../types/graphql'
 
 // ENS fallback client for addresses not indexed by Intuition
 const ensClient = createPublicClient({

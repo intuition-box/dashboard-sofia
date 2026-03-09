@@ -1,14 +1,6 @@
 import { useMemo } from 'react'
 import type { Address } from 'viem'
-import type { AlphaTester, PoolPosition } from '../types'
-
-export interface UserStats {
-  isAlphaTester: boolean
-  alphaData: AlphaTester | null
-  alphaRank: number | null
-  poolData: PoolPosition | null
-  poolRank: number | null
-}
+import type { AlphaTester, PoolPosition, UserStats } from '../types'
 
 export function useUserStats(
   walletAddress: Address | null,

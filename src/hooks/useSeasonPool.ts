@@ -4,7 +4,7 @@ import type { Address } from 'viem'
 import { graphqlQuery } from '../services/graphqlClient'
 import { SEASON_POOL_TERM_ID, SEASON_POOL_CURVE_ID } from '../config'
 import { GET_SEASON_POOL_POSITIONS } from '../graphql/queries'
-import type { GetSeasonPoolPositionsResponse, VaultRaw } from '../graphql/queries'
+import type { GetSeasonPoolPositionsResponse, VaultRaw } from '../types/graphql'
 import type { PoolPosition, VaultStats } from '../types'
 
 function processPositions(vault: VaultRaw): { positions: PoolPosition[]; vaultStats: VaultStats } {
