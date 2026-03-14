@@ -1,0 +1,278 @@
+/* ===========================================
+   Platform Grid — Sofia Dashboard
+   =========================================== */
+
+.platform-grid {
+  margin-bottom: var(--space-2xl);
+}
+
+.platform-grid__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.platform-grid__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+}
+
+.platform-grid__count {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.platform-grid__count span {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* === Filters === */
+
+.platform-grid__filters {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.platform-grid__search {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  background: var(--color-bg-glass-light);
+  border: 1px solid var(--color-border-glass);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--border-radius-pill);
+  outline: none;
+  flex: 1;
+  min-width: 180px;
+  transition: border-color var(--transition-fast);
+}
+
+.platform-grid__search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.platform-grid__search:focus {
+  border-color: var(--color-primary);
+}
+
+.platform-grid__filter-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg-glass-light);
+  border: 1px solid var(--color-border-glass);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.platform-grid__filter-btn:hover {
+  border-color: var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+.platform-grid__filter-btn--active {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+/* === Domain Group === */
+
+.platform-group {
+  margin-bottom: var(--space-xl);
+}
+
+.platform-group__label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--color-border-glass);
+}
+
+.platform-group__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-md);
+}
+
+/* === Platform Card === */
+
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--border-radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.platform-card:hover {
+  border-color: var(--color-border-light);
+  transform: translateY(-1px);
+}
+
+.platform-card--connected {
+  border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+}
+
+.platform-card__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.platform-card__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.platform-card__name {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-card__meta {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.platform-card__tag {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  background: var(--color-bg-glass-light);
+  padding: 2px var(--space-sm);
+  border-radius: var(--border-radius-pill);
+  white-space: nowrap;
+}
+
+.platform-card__tag--confidence {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+}
+
+.platform-card__tag--free {
+  color: var(--color-gold);
+  background: color-mix(in srgb, var(--color-gold) 10%, transparent);
+}
+
+.platform-card__btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--border-radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.platform-card__btn--connect {
+  color: var(--color-bg-primary);
+  background: var(--color-primary);
+}
+
+.platform-card__btn--connect:hover {
+  background: var(--color-primary-light);
+}
+
+.platform-card__btn--connected {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 12%, transparent);
+  cursor: default;
+}
+
+.platform-card__btn--connecting {
+  color: var(--color-text-muted);
+  background: var(--color-bg-glass-light);
+  cursor: wait;
+}
+
+.platform-card__btn--error {
+  color: var(--color-error);
+  background: color-mix(in srgb, var(--color-error) 12%, transparent);
+}
+
+/* === Toggle === */
+
+.platform-grid__toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xl);
+}
+
+.platform-grid__toggle-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  padding: var(--space-sm) var(--space-2xl);
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.platform-grid__toggle-btn:hover {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+/* === Responsive === */
+
+@media (max-width: 768px) {
+  .platform-group__items {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .platform-group__items {
+    grid-template-columns: 1fr;
+  }
+
+  .platform-grid__filters {
+    flex-direction: column;
+  }
+
+  .platform-grid__search {
+    width: 100%;
+  }
+}

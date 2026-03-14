@@ -5,7 +5,10 @@ import ProfileHeader from '../components/profile/ProfileHeader'
 import ProfileTabs from '../components/profile/ProfileTabs'
 import DomainSelector from '../components/profile/DomainSelector'
 import NicheSelector from '../components/profile/NicheSelector'
+import PlatformGrid from '../components/profile/PlatformGrid'
+import ScoreView from '../components/profile/ScoreView'
 import { useDomainSelection } from '../hooks/useDomainSelection'
+import { usePlatformConnections } from '../hooks/usePlatformConnections'
 import type { ProfileTab } from '../types/profile'
 import '../components/styles/profile.css'
 
@@ -23,6 +26,12 @@ function ProfilePage() {
     toggleNiche,
     maxDomains,
   } = useDomainSelection()
+  const {
+    connect,
+    disconnect,
+    getStatus,
+    connectedCount,
+  } = usePlatformConnections()
 
   useEffect(() => {
     if (!authenticated) {
@@ -35,7 +44,7 @@ function ProfilePage() {
   const walletAddress = user.wallet.address
 
   const headerStats = [
-    { label: 'Platforms', value: '0' },
+    { label: 'Platforms', value: String(connectedCount) },
     { label: 'Domains', value: String(selectedDomains.length) },
     { label: 'Niches', value: String(selectedNiches.length) },
   ]
@@ -115,21 +124,20 @@ function ProfilePage() {
           )}
 
           {activeTab === 'platforms' && (
-            <div className="profile-placeholder">
-              <div className="profile-placeholder__icon">🔗</div>
-              <p className="profile-placeholder__text">
-                Platform connections coming soon
-              </p>
-            </div>
+            <PlatformGrid
+              selectedNiches={selectedNiches}
+              getStatus={getStatus}
+              onConnect={connect}
+              onDisconnect={disconnect}
+            />
           )}
 
           {activeTab === 'scores' && (
-            <div className="profile-placeholder">
-              <div className="profile-placeholder__icon">📊</div>
-              <p className="profile-placeholder__text">
-                Score visualization coming soon
-              </p>
-            </div>
+            <ScoreView
+              selectedDomains={selectedDomains}
+              selectedNiches={selectedNiches}
+              getStatus={getStatus}
+            />
           )}
         </div>
       </div>
