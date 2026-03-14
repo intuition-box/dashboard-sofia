@@ -231,6 +231,78 @@
   background: color-mix(in srgb, var(--color-error) 12%, transparent);
 }
 
+.platform-card__btn--verify {
+  color: var(--color-gold);
+  background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+}
+
+.platform-card__btn--verify:hover {
+  background: color-mix(in srgb, var(--color-gold) 20%, transparent);
+}
+
+/* === Pending state === */
+
+.platform-card--pending {
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
+}
+
+/* === Username Input === */
+
+.platform-card__input-row {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.platform-card__input {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+  background: var(--color-bg-glass-light);
+  border: 1px solid var(--color-border-glass);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-md);
+  outline: none;
+  flex: 1;
+  min-width: 0;
+}
+
+.platform-card__input:focus {
+  border-color: var(--color-primary);
+}
+
+/* === Challenge Code === */
+
+.platform-card__challenge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.platform-card__challenge-text {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.platform-card__challenge-code {
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-gold);
+  background: var(--color-bg-glass-light);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-md);
+  user-select: all;
+  word-break: break-all;
+}
+
+/* === Error === */
+
+.platform-card__error {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--color-error);
+}
+
 /* === Toggle === */
 
 .platform-grid__toggle {

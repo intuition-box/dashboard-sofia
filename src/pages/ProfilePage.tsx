@@ -3,12 +3,15 @@ import { usePrivy } from '@privy-io/react-auth'
 import { useNavigate } from 'react-router-dom'
 import ProfileHeader from '../components/profile/ProfileHeader'
 import ProfileTabs from '../components/profile/ProfileTabs'
+import OverviewTab from '../components/profile/OverviewTab'
 import DomainSelector from '../components/profile/DomainSelector'
 import NicheSelector from '../components/profile/NicheSelector'
 import PlatformGrid from '../components/profile/PlatformGrid'
 import ScoreView from '../components/profile/ScoreView'
 import { useDomainSelection } from '../hooks/useDomainSelection'
 import { usePlatformConnections } from '../hooks/usePlatformConnections'
+import { useReputationScores } from '../hooks/useReputationScores'
+import { useUserProfile } from '../hooks/useUserProfile'
 import type { ProfileTab } from '../types/profile'
 import '../components/styles/profile.css'
 
@@ -30,8 +33,15 @@ function ProfilePage() {
     connect,
     disconnect,
     getStatus,
+    getConnection,
+    startChallenge,
+    verifyChallengeCode,
     connectedCount,
   } = usePlatformConnections()
+  const scores = useReputationScores(getStatus, selectedDomains, selectedNiches)
+  const { profile } = useUserProfile(
+    authenticated && user?.wallet?.address ? user.wallet.address : undefined
+  )
 
   useEffect(() => {
     if (!authenticated) {
@@ -67,41 +77,15 @@ function ProfilePage() {
         />
         <div className="profile-content">
           {activeTab === 'overview' && (
-            <>
-              <div className="profile-overview">
-                <div className="profile-overview__card">
-                  <div className="profile-overview__card-value">0</div>
-                  <div className="profile-overview__card-label">Certifications</div>
-                </div>
-                <div className="profile-overview__card">
-                  <div className="profile-overview__card-value">0</div>
-                  <div className="profile-overview__card-label">Pioneer Pages</div>
-                </div>
-                <div className="profile-overview__card">
-                  <div className="profile-overview__card-value">0 T</div>
-                  <div className="profile-overview__card-label">Trust Volume</div>
-                </div>
-                <div className="profile-overview__card">
-                  <div className="profile-overview__card-value">0</div>
-                  <div className="profile-overview__card-label">Transactions</div>
-                </div>
-              </div>
-              <div className="profile-cta">
-                <h2 className="profile-cta__title">
-                  Enrich your profile
-                </h2>
-                <p className="profile-cta__text">
-                  Select your domains of interest, connect your favorite platforms,
-                  and build your behavioral reputation across 103 platforms.
-                </p>
-                <button
-                  className="profile-cta__btn"
-                  onClick={() => setActiveTab('domains')}
-                >
-                  Get Started
-                </button>
-              </div>
-            </>
+            <OverviewTab
+              selectedDomains={selectedDomains}
+              selectedNiches={selectedNiches}
+              getStatus={getStatus}
+              domainScores={scores?.domains ?? []}
+              recentPositions={profile?.positions}
+              onNavigate={(tab) => handleTabChange(tab as ProfileTab)}
+              onToggleNiche={toggleNiche}
+            />
           )}
 
           {activeTab === 'domains' && domainStep === 'domains' && (
@@ -127,8 +111,11 @@ function ProfilePage() {
             <PlatformGrid
               selectedNiches={selectedNiches}
               getStatus={getStatus}
+              getConnection={getConnection}
               onConnect={connect}
               onDisconnect={disconnect}
+              onStartChallenge={startChallenge}
+              onVerifyChallenge={verifyChallengeCode}
             />
           )}
 

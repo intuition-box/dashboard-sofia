@@ -5,9 +5,7 @@ import { normalize } from 'viem/ens'
 import type { Address } from 'viem'
 import { createAvatar } from '@dicebear/core'
 import { glass } from '@dicebear/collection'
-import { graphqlQuery } from '../services/graphqlClient'
-import { GET_ACCOUNT_LABELS } from '../graphql/queries'
-import type { GetAccountLabelsResponse } from '../types/graphql'
+import { useGetAccountLabelsQuery } from '@0xsofia/dashboard-graphql'
 
 // ENS fallback client for addresses not indexed by Intuition
 const ensClient = createPublicClient({
@@ -27,10 +25,9 @@ function isRealLabel(label?: string | null): boolean {
 async function resolveViaGraphQL(addresses: string[]): Promise<void> {
   try {
     const checksumIds = addresses.map((a) => getAddress(a))
-    const result = await graphqlQuery<GetAccountLabelsResponse>(
-      GET_ACCOUNT_LABELS,
-      { ids: checksumIds }
-    )
+    const result = await useGetAccountLabelsQuery.fetcher({
+      ids: checksumIds,
+    })()
 
     for (const account of result.accounts || []) {
       const key = account.id.toLowerCase()

@@ -162,6 +162,7 @@ export interface UserInterestSelection {
 export type ConnectionStatus =
   | "disconnected"
   | "connecting"
+  | "pending_verification"
   | "connected"
   | "error"
   | "expired"
@@ -173,5 +174,6 @@ export interface PlatformConnection {
   lastSyncAt?: number
   userId?: string
   username?: string
+  challengeCode?: string
   error?: string
 }

@@ -5,23 +5,29 @@ import {
   getPlatformsForOnboarding,
 } from '../../config/platformCatalog'
 import { DOMAIN_BY_ID } from '../../config/taxonomy'
-import type { ConnectionStatus } from '../../types/reputation'
+import type { ConnectionStatus, PlatformConnection } from '../../types/reputation'
 import PlatformCard from './PlatformCard'
 import '../styles/platform-grid.css'
 
 interface PlatformGridProps {
   selectedNiches: string[]
   getStatus: (platformId: string) => ConnectionStatus
+  getConnection: (platformId: string) => PlatformConnection | undefined
   onConnect: (platformId: string) => void
   onDisconnect: (platformId: string) => void
+  onStartChallenge: (platformId: string, username: string) => void
+  onVerifyChallenge: (platformId: string) => void
   mode?: 'onboarding' | 'full'
 }
 
 function PlatformGrid({
   selectedNiches,
   getStatus,
+  getConnection,
   onConnect,
   onDisconnect,
+  onStartChallenge,
+  onVerifyChallenge,
   mode: initialMode = 'onboarding',
 }: PlatformGridProps) {
   const [mode, setMode] = useState(initialMode)
@@ -132,8 +138,11 @@ function PlatformGrid({
                   key={platform.id}
                   platform={platform}
                   status={getStatus(platform.id)}
+                  connection={getConnection(platform.id)}
                   onConnect={() => onConnect(platform.id)}
                   onDisconnect={() => onDisconnect(platform.id)}
+                  onStartChallenge={(username) => onStartChallenge(platform.id, username)}
+                  onVerifyChallenge={() => onVerifyChallenge(platform.id)}
                 />
               ))}
             </div>

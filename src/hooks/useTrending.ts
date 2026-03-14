@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import { graphqlQuery } from '../services/graphqlClient'
+import {
+  useGetTrendingByPredicateQuery,
+  type GetTrendingByPredicateQuery,
+} from '@0xsofia/dashboard-graphql'
 import { PREDICATE_IDS } from '../config'
-import { GET_TRENDING_BY_PREDICATE } from '../graphql/queries'
-import type { GetTrendingByPredicateResponse, TrendingTripleRaw } from '../types/graphql'
 import type { IntentCategory, TrendingItemLive } from '../types'
+
+type TrendingTripleRaw = GetTrendingByPredicateQuery['triples'][number]
 
 const CATEGORIES: { type: IntentCategory; predicateId: string }[] = [
   { type: 'trusted', predicateId: PREDICATE_IDS.TRUSTS },
@@ -64,10 +67,10 @@ export function useTrending() {
     async function fetchAll() {
       try {
         const promises = CATEGORIES.map(async ({ type, predicateId }) => {
-          const data = await graphqlQuery<GetTrendingByPredicateResponse>(
-            GET_TRENDING_BY_PREDICATE,
-            { predicateId, limit: 5 }
-          )
+          const data = await useGetTrendingByPredicateQuery.fetcher({
+            predicateId,
+            limit: 5,
+          })()
           const first = (data.triples || []).find(isValidTriple)
           return first ? tripleToItem(first, type) : null
         })

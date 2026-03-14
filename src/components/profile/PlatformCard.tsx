@@ -1,4 +1,6 @@
-import type { PlatformConfig, ConnectionStatus } from '../../types/reputation'
+import { useState } from 'react'
+import type { PlatformConfig, ConnectionStatus, PlatformConnection } from '../../types/reputation'
+import { needsUsernameInput } from '../../services/oauthService'
 
 const CONFIDENCE_LABELS: Record<string, string> = {
   very_high: "Very High",
@@ -10,6 +12,7 @@ const CONFIDENCE_LABELS: Record<string, string> = {
 const STATUS_LABELS: Record<ConnectionStatus, string> = {
   disconnected: "Connect",
   connecting: "Connecting...",
+  pending_verification: "Verify",
   connected: "Connected",
   error: "Retry",
   expired: "Reconnect",
@@ -18,32 +21,56 @@ const STATUS_LABELS: Record<ConnectionStatus, string> = {
 interface PlatformCardProps {
   platform: PlatformConfig
   status: ConnectionStatus
+  connection?: PlatformConnection
   onConnect: () => void
   onDisconnect: () => void
+  onStartChallenge?: (username: string) => void
+  onVerifyChallenge?: () => void
 }
 
 function PlatformCard({
   platform,
   status,
+  connection,
   onConnect,
   onDisconnect,
+  onStartChallenge,
+  onVerifyChallenge,
 }: PlatformCardProps) {
+  const [usernameInput, setUsernameInput] = useState('')
+  const [showInput, setShowInput] = useState(false)
+  const requiresUsername = needsUsernameInput(platform.id)
+
   const btnClass =
     status === 'connected' ? 'platform-card__btn--connected' :
     status === 'connecting' ? 'platform-card__btn--connecting' :
+    status === 'pending_verification' ? 'platform-card__btn--verify' :
     status === 'error' || status === 'expired' ? 'platform-card__btn--error' :
     'platform-card__btn--connect'
 
   const handleClick = () => {
     if (status === 'connected') {
       onDisconnect()
-    } else if (status !== 'connecting') {
+    } else if (status === 'pending_verification') {
+      onVerifyChallenge?.()
+    } else if (status === 'connecting') {
+      return
+    } else if (requiresUsername && !showInput) {
+      setShowInput(true)
+    } else {
       onConnect()
     }
   }
 
+  const handleSubmitUsername = () => {
+    if (usernameInput.trim()) {
+      onStartChallenge?.(usernameInput.trim())
+      setShowInput(false)
+    }
+  }
+
   return (
-    <div className={`platform-card${status === 'connected' ? ' platform-card--connected' : ''}`}>
+    <div className={`platform-card${status === 'connected' ? ' platform-card--connected' : ''}${status === 'pending_verification' ? ' platform-card--pending' : ''}`}>
       <div className="platform-card__top">
         <div
           className="platform-card__icon"
@@ -53,6 +80,7 @@ function PlatformCard({
         </div>
         <span className="platform-card__name">{platform.name}</span>
       </div>
+
       <div className="platform-card__meta">
         <span className="platform-card__tag">
           {platform.authType}
@@ -66,12 +94,54 @@ function PlatformCard({
           </span>
         )}
       </div>
-      <button
-        className={`platform-card__btn ${btnClass}`}
-        onClick={handleClick}
-      >
-        {STATUS_LABELS[status]}
-      </button>
+
+      {/* Username input for public/api_key platforms */}
+      {showInput && status === 'disconnected' && (
+        <div className="platform-card__input-row">
+          <input
+            className="platform-card__input"
+            type="text"
+            placeholder={`Your ${platform.name} username`}
+            value={usernameInput}
+            onChange={(e) => setUsernameInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmitUsername()}
+          />
+          <button
+            className="platform-card__btn platform-card__btn--connect"
+            onClick={handleSubmitUsername}
+            disabled={!usernameInput.trim()}
+          >
+            Go
+          </button>
+        </div>
+      )}
+
+      {/* Challenge code display */}
+      {status === 'pending_verification' && connection?.challengeCode && (
+        <div className="platform-card__challenge">
+          <p className="platform-card__challenge-text">
+            Paste this code in your {platform.name} bio:
+          </p>
+          <code className="platform-card__challenge-code">
+            {connection.challengeCode}
+          </code>
+        </div>
+      )}
+
+      {/* Error message */}
+      {connection?.error && (
+        <p className="platform-card__error">{connection.error}</p>
+      )}
+
+      {/* Action button */}
+      {!showInput && (
+        <button
+          className={`platform-card__btn ${btnClass}`}
+          onClick={handleClick}
+        >
+          {STATUS_LABELS[status]}
+        </button>
+      )}
     </div>
   )
 }
