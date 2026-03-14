@@ -3,6 +3,8 @@ import { usePrivy } from '@privy-io/react-auth'
 import { useNavigate } from 'react-router-dom'
 import ProfileHeader from '../components/profile/ProfileHeader'
 import ProfileTabs from '../components/profile/ProfileTabs'
+import DomainSelector from '../components/profile/DomainSelector'
+import { useDomainSelection } from '../hooks/useDomainSelection'
 import type { ProfileTab } from '../types/profile'
 import '../components/styles/profile.css'
 
@@ -10,6 +12,7 @@ function ProfilePage() {
   const { authenticated, user } = usePrivy()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview')
+  const { selectedDomains, toggleDomain, maxDomains } = useDomainSelection()
 
   useEffect(() => {
     if (!authenticated) {
@@ -23,7 +26,7 @@ function ProfilePage() {
 
   const headerStats = [
     { label: 'Platforms', value: '0' },
-    { label: 'Domains', value: '0' },
+    { label: 'Domains', value: String(selectedDomains.length) },
     { label: 'Score', value: '—' },
   ]
 
@@ -78,12 +81,12 @@ function ProfilePage() {
           )}
 
           {activeTab === 'domains' && (
-            <div className="profile-placeholder">
-              <div className="profile-placeholder__icon">🎯</div>
-              <p className="profile-placeholder__text">
-                Domain selection coming next
-              </p>
-            </div>
+            <DomainSelector
+              selectedDomains={selectedDomains}
+              onToggle={toggleDomain}
+              onContinue={() => setActiveTab('platforms')}
+              maxSelection={maxDomains}
+            />
           )}
 
           {activeTab === 'platforms' && (
