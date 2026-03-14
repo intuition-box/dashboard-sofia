@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react'
 import { getSuggestedPlatforms } from '../config/taxonomy'
 
 const STORAGE_KEY = 'sofia_domain_selection'
-const MAX_DOMAINS = 3
 
 interface DomainSelectionState {
   selectedDomains: string[]
@@ -37,7 +36,6 @@ export function useDomainSelection() {
           selectedNiches: prev.selectedNiches,
         }
       }
-      if (prev.selectedDomains.length >= MAX_DOMAINS) return prev
       return {
         selectedDomains: [...prev.selectedDomains, domainId],
         selectedNiches: prev.selectedNiches,
@@ -70,6 +68,5 @@ export function useDomainSelection() {
     toggleDomain,
     toggleNiche,
     clearSelection,
-    maxDomains: MAX_DOMAINS,
   }
 }

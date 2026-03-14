@@ -2,32 +2,30 @@ import { useState, useEffect } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 import { useNavigate } from 'react-router-dom'
 import ProfileHeader from '../components/profile/ProfileHeader'
-import ProfileTabs from '../components/profile/ProfileTabs'
 import OverviewTab from '../components/profile/OverviewTab'
 import DomainSelector from '../components/profile/DomainSelector'
 import NicheSelector from '../components/profile/NicheSelector'
 import PlatformGrid from '../components/profile/PlatformGrid'
 import ScoreView from '../components/profile/ScoreView'
+import ShareProfileModal from '../components/profile/ShareProfileModal'
 import { useDomainSelection } from '../hooks/useDomainSelection'
 import { usePlatformConnections } from '../hooks/usePlatformConnections'
 import { useReputationScores } from '../hooks/useReputationScores'
 import { useUserProfile } from '../hooks/useUserProfile'
-import type { ProfileTab } from '../types/profile'
+import { useShareProfile } from '../hooks/useShareProfile'
 import '../components/styles/profile.css'
 
-type DomainStep = 'domains' | 'niches'
+type View = 'overview' | 'interests' | 'niches' | 'platforms' | 'scores'
 
 function ProfilePage() {
   const { authenticated, user } = usePrivy()
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<ProfileTab>('overview')
-  const [domainStep, setDomainStep] = useState<DomainStep>('domains')
+  const [view, setView] = useState<View>('overview')
   const {
     selectedDomains,
     selectedNiches,
     toggleDomain,
     toggleNiche,
-    maxDomains,
   } = useDomainSelection()
   const {
     connect,
@@ -42,6 +40,12 @@ function ProfilePage() {
   const { profile } = useUserProfile(
     authenticated && user?.wallet?.address ? user.wallet.address : undefined
   )
+  const shareProfile = useShareProfile({
+    walletAddress: user?.wallet?.address ?? '',
+    domainScores: scores?.domains ?? [],
+    connectedCount,
+    totalCertifications: profile?.totalCertifications ?? 0,
+  })
 
   useEffect(() => {
     if (!authenticated) {
@@ -55,13 +59,16 @@ function ProfilePage() {
 
   const headerStats = [
     { label: 'Platforms', value: String(connectedCount) },
-    { label: 'Domains', value: String(selectedDomains.length) },
+    { label: 'Interests', value: String(selectedDomains.length) },
     { label: 'Niches', value: String(selectedNiches.length) },
   ]
 
-  const handleTabChange = (tab: ProfileTab) => {
-    setActiveTab(tab)
-    if (tab === 'domains') setDomainStep('domains')
+  const handleNavigate = (target: string) => {
+    if (target === 'domains') {
+      setView('interests')
+    } else {
+      setView(target as View)
+    }
   }
 
   return (
@@ -70,44 +77,41 @@ function ProfilePage() {
         <ProfileHeader
           walletAddress={walletAddress}
           stats={headerStats}
-        />
-        <ProfileTabs
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
+          onShare={shareProfile.openShareModal}
+          sharing={shareProfile.isLoading}
         />
         <div className="profile-content">
-          {activeTab === 'overview' && (
+          {view === 'overview' && (
             <OverviewTab
               selectedDomains={selectedDomains}
               selectedNiches={selectedNiches}
               getStatus={getStatus}
               domainScores={scores?.domains ?? []}
-              recentPositions={profile?.positions}
-              onNavigate={(tab) => handleTabChange(tab as ProfileTab)}
+              onNavigate={handleNavigate}
               onToggleNiche={toggleNiche}
             />
           )}
 
-          {activeTab === 'domains' && domainStep === 'domains' && (
+          {view === 'interests' && (
             <DomainSelector
               selectedDomains={selectedDomains}
               onToggle={toggleDomain}
-              onContinue={() => setDomainStep('niches')}
-              maxSelection={maxDomains}
+              onContinue={() => setView('niches')}
+              onBack={() => setView('overview')}
             />
           )}
 
-          {activeTab === 'domains' && domainStep === 'niches' && (
+          {view === 'niches' && (
             <NicheSelector
               selectedDomains={selectedDomains}
               selectedNiches={selectedNiches}
               onToggleNiche={toggleNiche}
-              onBack={() => setDomainStep('domains')}
-              onContinue={() => setActiveTab('platforms')}
+              onBack={() => setView('interests')}
+              onContinue={() => setView('overview')}
             />
           )}
 
-          {activeTab === 'platforms' && (
+          {view === 'platforms' && (
             <PlatformGrid
               selectedNiches={selectedNiches}
               getStatus={getStatus}
@@ -116,18 +120,31 @@ function ProfilePage() {
               onDisconnect={disconnect}
               onStartChallenge={startChallenge}
               onVerifyChallenge={verifyChallengeCode}
+              onBack={() => setView('overview')}
             />
           )}
 
-          {activeTab === 'scores' && (
+          {view === 'scores' && (
             <ScoreView
               selectedDomains={selectedDomains}
               selectedNiches={selectedNiches}
               getStatus={getStatus}
+              onBack={() => setView('overview')}
             />
           )}
         </div>
       </div>
+      <ShareProfileModal
+        isOpen={shareProfile.isModalOpen}
+        onClose={shareProfile.closeShareModal}
+        shareUrl={shareProfile.shareUrl}
+        ogImageUrl={shareProfile.ogImageUrl}
+        isLoading={shareProfile.isLoading}
+        error={shareProfile.error}
+        onCopyLink={shareProfile.handleCopyLink}
+        onShareOnX={shareProfile.handleShareOnX}
+        copied={shareProfile.copied}
+      />
     </section>
   )
 }

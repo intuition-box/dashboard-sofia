@@ -90,6 +90,33 @@
   letter-spacing: 0.5px;
 }
 
+.profile-header__share-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background: var(--color-bg-glass-light);
+  border: 1px solid var(--color-border-glass);
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.profile-header__share-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.profile-header__share-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* === Tabs === */
 
 .profile-tabs {

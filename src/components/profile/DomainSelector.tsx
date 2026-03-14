@@ -23,16 +23,15 @@ interface DomainSelectorProps {
   selectedDomains: string[]
   onToggle: (domainId: string) => void
   onContinue: () => void
-  maxSelection?: number
+  onBack?: () => void
 }
 
 function DomainSelector({
   selectedDomains,
   onToggle,
   onContinue,
-  maxSelection = 3,
+  onBack,
 }: DomainSelectorProps) {
-  const isMaxReached = selectedDomains.length >= maxSelection
 
   return (
     <div className="domain-selector">
@@ -41,14 +40,13 @@ function DomainSelector({
           Select your domains
         </h2>
         <span className="domain-selector__count">
-          <span>{selectedDomains.length}</span> / {maxSelection} selected
+          <span>{selectedDomains.length}</span> selected
         </span>
       </div>
 
       <div className="domain-selector__grid">
         {SOFIA_DOMAINS.map((domain) => {
           const isSelected = selectedDomains.includes(domain.id)
-          const isDisabled = !isSelected && isMaxReached
           const nicheCount = domain.categories.reduce(
             (sum, c) => sum + c.niches.length, 0
           )
@@ -56,12 +54,8 @@ function DomainSelector({
           return (
             <div
               key={domain.id}
-              className={[
-                'domain-card',
-                isSelected && 'domain-card--selected',
-                isDisabled && 'domain-card--disabled',
-              ].filter(Boolean).join(' ')}
-              onClick={() => !isDisabled && onToggle(domain.id)}
+              className={`domain-card${isSelected ? ' domain-card--selected' : ''}`}
+              onClick={() => onToggle(domain.id)}
               style={{
                 '--domain-color': domain.color,
               } as React.CSSProperties}
@@ -86,6 +80,14 @@ function DomainSelector({
       </div>
 
       <div className="domain-selector__actions">
+        {onBack && (
+          <button
+            className="domain-selector__btn domain-selector__btn--secondary"
+            onClick={onBack}
+          >
+            Back
+          </button>
+        )}
         <button
           className="domain-selector__btn domain-selector__btn--primary"
           onClick={onContinue}

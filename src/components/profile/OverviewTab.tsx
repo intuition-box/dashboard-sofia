@@ -3,7 +3,6 @@ import { DOMAIN_BY_ID } from '../../config/taxonomy'
 import { PLATFORM_CATALOG } from '../../config/platformCatalog'
 import ScoreRadar from './ScoreRadar'
 import type { ConnectionStatus, DomainScore } from '../../types/reputation'
-import type { UserPosition } from '../../services/profileService'
 import '../styles/overview-tab.css'
 
 interface OverviewTabProps {
@@ -11,7 +10,6 @@ interface OverviewTabProps {
   selectedNiches: string[]
   getStatus: (platformId: string) => ConnectionStatus
   domainScores: DomainScore[]
-  recentPositions?: UserPosition[]
   onNavigate: (tab: string) => void
   onToggleNiche: (nicheId: string) => void
 }
@@ -21,7 +19,6 @@ function OverviewTab({
   selectedNiches,
   getStatus,
   domainScores,
-  recentPositions,
   onNavigate,
   onToggleNiche,
 }: OverviewTabProps) {
@@ -220,39 +217,6 @@ function OverviewTab({
             )}
           </section>
 
-          {/* Recent Activity */}
-          <section className="overview-tab__section">
-            <div className="overview-tab__section-header">
-              <h3 className="overview-tab__section-title">Activite recente</h3>
-            </div>
-            {!recentPositions || recentPositions.length === 0 ? (
-              <p className="overview-tab__empty">
-                Aucune certification on-chain pour le moment.
-              </p>
-            ) : (
-              <div className="overview-tab__activity-list">
-                {recentPositions.slice(0, 8).map((pos, i) => (
-                  <div key={i} className="overview-tab__activity-row">
-                    <span className="overview-tab__activity-label">
-                      {pos.isTriple
-                        ? `${pos.predicateLabel} → ${pos.objectLabel}`
-                        : pos.atomLabel || 'Atom'}
-                    </span>
-                    {pos.objectUrl && (
-                      <a
-                        href={pos.objectUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="overview-tab__activity-link"
-                      >
-                        ↗
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
         </>
       )}
     </div>

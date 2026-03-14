@@ -9,9 +9,10 @@ interface ScoreViewProps {
   selectedDomains: string[]
   selectedNiches: string[]
   getStatus: (platformId: string) => ConnectionStatus
+  onBack?: () => void
 }
 
-function ScoreView({ selectedDomains, selectedNiches, getStatus }: ScoreViewProps) {
+function ScoreView({ selectedDomains, selectedNiches, getStatus, onBack }: ScoreViewProps) {
   const profile = useReputationScores(getStatus, selectedDomains, selectedNiches)
   const [expandedDomain, setExpandedDomain] = useState<string | null>(null)
 
@@ -31,6 +32,12 @@ function ScoreView({ selectedDomains, selectedNiches, getStatus }: ScoreViewProp
   return (
     <div className="score-page">
       <div className="score-page__header">
+        {onBack && (
+          <button className="score-page__back-btn" onClick={onBack}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Back
+          </button>
+        )}
         <h2 className="score-page__title">Reputation Scores</h2>
         <span className="score-page__confidence">
           Global confidence: <span>{confidencePct}%</span> · {profile.totalPlatforms} platform{profile.totalPlatforms !== 1 ? 's' : ''}

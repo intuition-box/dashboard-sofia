@@ -67,7 +67,6 @@ function ScoreDomainCard({ domainScore }: ScoreDomainCardProps) {
         </div>
         <div className="score-domain__score">
           <span className="score-domain__score-value">{domainScore.score}</span>
-          <span className="score-domain__score-max">/100</span>
         </div>
       </div>
 

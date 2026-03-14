@@ -15,6 +15,24 @@
   gap: var(--space-md);
 }
 
+.platform-grid__back-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.platform-grid__back-btn:hover {
+  color: var(--color-text-primary);
+}
+
 .platform-grid__title {
   font-family: var(--font-display);
   font-size: var(--font-size-xl);
@@ -160,11 +178,17 @@
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-primary);
+  text-decoration: none;
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.platform-card__name:hover {
+  color: var(--color-primary);
 }
 
 .platform-card__meta {
@@ -193,6 +217,12 @@
   background: color-mix(in srgb, var(--color-gold) 10%, transparent);
 }
 
+.platform-card__actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: auto;
+}
+
 .platform-card__btn {
   font-family: var(--font-body);
   font-size: var(--font-size-xs);
@@ -202,6 +232,9 @@
   border: none;
   cursor: pointer;
   transition: all var(--transition-fast);
+  text-decoration: none;
+  text-align: center;
+  flex: 1;
   text-align: center;
 }
 
@@ -238,6 +271,17 @@
 
 .platform-card__btn--verify:hover {
   background: color-mix(in srgb, var(--color-gold) 20%, transparent);
+}
+
+.platform-card__btn--certify {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-glass-light);
+  border: 1px solid var(--color-border-glass);
+}
+
+.platform-card__btn--certify:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 /* === Pending state === */

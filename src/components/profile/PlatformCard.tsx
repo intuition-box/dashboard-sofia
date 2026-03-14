@@ -1,6 +1,18 @@
 import { useState } from 'react'
 import type { PlatformConfig, ConnectionStatus, PlatformConnection } from '../../types/reputation'
 import { needsUsernameInput } from '../../services/oauthService'
+import { getCertifyUrl } from '../../utils/sofiaDetect'
+
+function getPlatformUrl(platform: PlatformConfig): string {
+  if (platform.apiBaseUrl) {
+    try {
+      const { protocol, hostname } = new URL(platform.apiBaseUrl)
+      const base = hostname.replace(/^api\./, '').replace(/^www\./, '')
+      return `${protocol}//${base}`
+    } catch { /* fallback below */ }
+  }
+  return `https://${platform.id}.com`
+}
 
 const CONFIDENCE_LABELS: Record<string, string> = {
   very_high: "Very High",
@@ -78,7 +90,15 @@ function PlatformCard({
         >
           {platform.name.charAt(0).toUpperCase()}
         </div>
-        <span className="platform-card__name">{platform.name}</span>
+        <a
+          className="platform-card__name"
+          href={getPlatformUrl(platform)}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {platform.name}
+        </a>
       </div>
 
       <div className="platform-card__meta">
@@ -133,14 +153,24 @@ function PlatformCard({
         <p className="platform-card__error">{connection.error}</p>
       )}
 
-      {/* Action button */}
+      {/* Action buttons */}
       {!showInput && (
-        <button
-          className={`platform-card__btn ${btnClass}`}
-          onClick={handleClick}
-        >
-          {STATUS_LABELS[status]}
-        </button>
+        <div className="platform-card__actions">
+          <button
+            className={`platform-card__btn ${btnClass}`}
+            onClick={handleClick}
+          >
+            {STATUS_LABELS[status]}
+          </button>
+          <a
+            className="platform-card__btn platform-card__btn--certify"
+            href={getCertifyUrl(getPlatformUrl(platform))}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Certify
+          </a>
+        </div>
       )}
     </div>
   )

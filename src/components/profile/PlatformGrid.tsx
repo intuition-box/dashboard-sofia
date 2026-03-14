@@ -18,6 +18,7 @@ interface PlatformGridProps {
   onStartChallenge: (platformId: string, username: string) => void
   onVerifyChallenge: (platformId: string) => void
   mode?: 'onboarding' | 'full'
+  onBack?: () => void
 }
 
 function PlatformGrid({
@@ -29,6 +30,7 @@ function PlatformGrid({
   onStartChallenge,
   onVerifyChallenge,
   mode: initialMode = 'onboarding',
+  onBack,
 }: PlatformGridProps) {
   const [mode, setMode] = useState(initialMode)
   const [search, setSearch] = useState('')
@@ -87,6 +89,12 @@ function PlatformGrid({
   return (
     <div className="platform-grid">
       <div className="platform-grid__header">
+        {onBack && (
+          <button className="platform-grid__back-btn" onClick={onBack}>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Back
+          </button>
+        )}
         <h2 className="platform-grid__title">
           {mode === 'onboarding' ? 'Suggested Platforms' : 'All Platforms'}
         </h2>
